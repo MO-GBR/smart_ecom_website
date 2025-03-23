@@ -1,7 +1,3 @@
-import env from "dotenv";
-
-env.config();
-
 import { ErrorResponse } from "../Utils/HandleResponse.js";
 import { decodeToken } from '../Utils/HandleToken.js';
 

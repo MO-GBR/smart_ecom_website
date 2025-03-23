@@ -4,6 +4,7 @@ import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 // Custom Imports
 import { currentTime } from "./Utils/HandleResponse.js";
@@ -21,14 +22,9 @@ env.config();
 
 const PORT = process.env.PORT;
 
-// Server Database Connection
+// Server Setup
 const app = express();
 const server = http.createServer(app);
-
-server.listen(PORT, () => {
-    console.log(`server is running on ${PORT}`);
-    connectDB();
-});
 
 // Express App Setup
 const logger = (req, res, next) => {
@@ -54,3 +50,20 @@ app.use("/api/users", UsersRoutes);
 app.use("/api/cart", CartRoutes);
 app.use("/api/product", ProductRoutes);
 app.use("/api/order", OrderRoutes);
+
+// Deployment setup
+const __dirname = path.resolve();
+
+if(process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, '../client/dist')));
+
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'));
+    });
+}
+
+// Server & Database Connection
+server.listen(PORT, () => {
+    console.log(`server is running on ${PORT}`);
+    connectDB();
+});

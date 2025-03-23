@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-import { v4 as uuidv4 } from 'uuid';
 import env from "dotenv";
 import Order from '../Mongo/Models/Order.js';
 import User from "../Mongo/Models/User.js";
@@ -7,55 +6,12 @@ import Cart from "../Mongo/Models/Cart.js";
 import { ActionResponse, ErrorResponse } from '../Utils/HandleResponse.js';
 
 env.config();
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-// // Create order
-// export const createOrder = async (req, res) => {
-//     const { address, amount, phoneNumber, token } = req.body;
-
-//     const randomKey = uuidv4();
-
-//     try {
-//         const payment = stripe.customers.create({
-//             email: token.email,
-//             source: token
-//         }).then(async (customer) => {
-//             const user = await User.findOne({email: customer.email});
-//             const newOrder = await Order.create({
-//                 buyer: user,
-//                 amount,
-//                 address,
-//                 phoneNumber,
-//                 products: user.cart,
-//                 stripeId: customer.id
-//             });
-
-//             console.log("Order >>>", newOrder, "User >>>", user);
-
-//             stripe.charges.create({
-//                 amount: amount * 100,
-//                 currency: "usd",
-//                 customer: customer.id,
-//                 receipt_email: token.email
-//             }, { randomKey });
-//         }).then((result) => {
-//             const data = new ActionResponse(result, 200);
-//             res.status(200).json(data);
-//         });
-        
-//         return payment;
-//     } catch (error) {
-//         console.log("Error in payment controller", error.message);
-//         const err = new ErrorResponse(error.message, 400);
-//         return res.status(400).json(err);
-//     }
-// };
-
 // Create order
 export const createOrder = async (req, res) => {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
     const { address, amount, phoneNumber, token, fullCart, cartId, userId } = req.body;
-    console.log(fullCart);
+    
     try {
         // 1. Create a Customer.
         const customer = await stripe.customers.create({
