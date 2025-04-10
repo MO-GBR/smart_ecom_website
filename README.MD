@@ -14,12 +14,15 @@
 ---
 # Tech Stack
 - React JS
+- Redux
 - Node JS
 - Express JS
 - Tailwind CSS
-- Mongo DB
-- Mongoose
+- Mongo DB / Mongoose
+- Cloudinary
 - Stripe
+- Nodemailer
+- Chart JS
 - GSAP for animations
 ---
 
@@ -73,3 +76,46 @@
 - Add product form page
 - Edit product form pag
 - Admin dashboard
+
+# Quick Start
+1. Step 1: Clone this repo
+```bash
+git clone git@github.com:MO-GBR/smart_ecom_website.git
+```
+2. ENV Files
+- Client
+```bash
+VITE_API_BASE_URL=
+VITE_STRIPE_PUBLIC_KEY=
+```
+- Api
+```bash
+PORT=5000
+MONGO_DB_URI=
+JWT_SEC=
+EMAIL_SERVICE=
+EMAIL_USERNAME=
+EMAIL_PASSWORD=
+EMAIL_FROM=
+BASE_URL=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+STRIPE_PUBLIC_KEY=
+STRIPE_SECRET_KEY=
+NODE_ENV="production"
+```
+3. Step 3: Run this Command
+```bash
+npm run build
+```
+- It will do 3 things
+  1. Install dependencies in the api folder
+  2. Install dependencies in the client folder
+  3. Build the dist folder in the client
+
+4. Step 4: Run this Command
+```bash
+npm run start
+```
+- It will run the server.
