@@ -82,10 +82,10 @@
 ```bash
 git clone git@github.com:MO-GBR/smart_ecom_website.git
 ```
-2. ENV Files
+2. Step 2: ENV Files
 - Client
 ```bash
-VITE_API_BASE_URL=
+VITE_API_BASE_URL='http://localhost:5000/api'
 VITE_STRIPE_PUBLIC_KEY=
 ```
 - Api
@@ -109,13 +109,10 @@ NODE_ENV="production"
 ```bash
 npm run build
 ```
-- It will do 3 things
-  1. Install dependencies in the api folder
-  2. Install dependencies in the client folder
-  3. Build the dist folder in the client
+- It will do 4 things
+  1. Install dependencies in the api folder.
+  2. Install dependencies in the client folder.
+  3. Build the dist folder in the client (Front-end).
+  4. Start the Api Server (Back-end).
 
-4. Step 4: Run this Command
-```bash
-npm run start
-```
-- It will run the server.
+4. Step 4: Open http://localhost:5000/ on your browser
