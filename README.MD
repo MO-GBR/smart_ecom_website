@@ -85,7 +85,7 @@ git clone git@github.com:MO-GBR/smart_ecom_website.git
 2. Step 2: ENV Files
 - Client
 ```bash
-VITE_API_BASE_URL='http://localhost:5000/api'
+VITE_BASE_URL='http://localhost:5000/api'
 VITE_STRIPE_PUBLIC_KEY=
 ```
 - Api
@@ -97,7 +97,7 @@ EMAIL_SERVICE=
 EMAIL_USERNAME=
 EMAIL_PASSWORD=
 EMAIL_FROM=
-BASE_URL=
+BASE_URL="http://localhost:5000"
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=

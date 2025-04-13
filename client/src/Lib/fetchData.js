@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export const fetchData = async (url, fetchMethod, body) => {
     const config = {
