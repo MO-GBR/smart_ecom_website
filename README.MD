@@ -107,12 +107,13 @@ NODE_ENV="production"
 ```
 3. Step 3: Run this Command
 ```bash
-npm run build
+cd smart_ecom_website && npm run build
 ```
-- It will do 4 things
-  1. Install dependencies in the api folder.
-  2. Install dependencies in the client folder.
-  3. Build the dist folder in the client (Front-end).
-  4. Start the Api Server (Back-end).
+- It will do 5 things
+  1. Access the smart_ecom_website folder.
+  2. Install dependencies in the api folder.
+  3. Install dependencies in the client folder.
+  4. Build the dist folder in the client (Front-end).
+  5. Start the Api Server (Back-end).
 
 4. Step 4: Open http://localhost:5000/ on your browser
