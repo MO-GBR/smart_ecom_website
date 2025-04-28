@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react'
 import Product from '../Components/Product'
 import { useFetch } from '../Hook/useFetch';
 import { useLoading } from '../Hook/useLoading';
-import SCard from '../Components/Skeleton/SCard';
+import { useGetProductsQuery } from '../Redux/RTK/Products';
+import ProductSkeleton from '../Components/Skeleton/ProductSkeleton';
 
 
 const Products = () => {
-    const [ data ] = useFetch('product/');
-    const [ loading ] = useLoading();
+    const { data, isLoading, refetch } = useGetProductsQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    });
+
+    useEffect(() => {
+        refetch();
+    }, []);
 
     return (
         <div className='g1'>
@@ -17,14 +23,17 @@ const Products = () => {
             <div className='flexCenter w-full'>
                 <div className='grid grid-cols-3 max-md:grid-cols-1'>
                     {
-                        data && data.data.map((watch, index) => {
-                            if(loading) {
+                        data?.data.map((watch, index) => {
+                            if(isLoading) {
                                 return (
-                                    <SCard />
+                                    <ProductSkeleton key={index} />
                                 )
                             } else {
                                 return (
-                                    <Product title={watch.title} img={watch.img} price={watch.price} id={watch._id} key={index} />
+                                    <Product
+                                        productDetails={watch}
+                                        key={index}
+                                    />
                                 )
                             }
                         })

@@ -9,6 +9,7 @@ import path from 'path';
 // Custom Imports
 import { currentTime } from "./Utils/HandleResponse.js";
 import { connectDB } from "./Mongo/Connection.js";
+import { errorHandle } from "./Middleware/HandleAuth.js";
 
 // Import Routes
 import AuthRoutes from './Routes/Auth.js';
@@ -44,9 +45,17 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb', extended: true }));
 
+// Passport JS Setup
+import './Config/Passport.js'
+import passport from 'passport';
+import PassportRoutes from './Routes/Passport.js';
+
+app.use(passport.initialize());
+app.use("/api/oauth", PassportRoutes);
+
 // Routes
 app.use("/api/auth", AuthRoutes);
-app.use("/api/users", UsersRoutes);
+app.use("/api/user", UsersRoutes);
 app.use("/api/cart", CartRoutes);
 app.use("/api/product", ProductRoutes);
 app.use("/api/order", OrderRoutes);
@@ -67,3 +76,5 @@ server.listen(PORT, () => {
     console.log(`server is running on ${PORT}`);
     connectDB();
 });
+
+app.use(errorHandle);

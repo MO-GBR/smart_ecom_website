@@ -1,10 +1,3 @@
-export const watch = [
-    "/images/watch/1.png",
-    "/images/watch/2.png",
-    "/images/watch/3.png",
-    "/images/watch/4.png",
-    "/images/watch/5.png",
-];
 export const products = [
   {
     title: "Watch 1 XYZ A1",
@@ -123,5 +116,3 @@ export const colors = [
     code: "#fc0303"
   }
 ];
-
-export const routes = ['admin', 'newproduct', 'checkout', 'success', 'editproduct'];

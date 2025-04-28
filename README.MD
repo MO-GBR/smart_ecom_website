@@ -17,6 +17,8 @@
 - Redux
 - Node JS
 - Express JS
+- JWT
+- Passport JS
 - Tailwind CSS
 - Mongo DB / Mongoose
 - Cloudinary
@@ -25,6 +27,19 @@
 - Chart JS
 - GSAP for animations
 ---
+
+# Code Overview
+## 1. Front-end
+1. Modern Design and cool animations using 👉 Tailwind Css and GSAP.
+2. State management using Redux
+3. Managing the connection between the front-end and the back-end and fetching data using Redux RTK Query
+4. Full user Authentication System
+5. Real Payments using stripe
+
+## 2. Back-end
+1. Clean folder structure
+2. Authentication Functions using 👉 Cookies, JWT, Mongoose, Passport JS
+3. Error Handling for all routes
 
 # Highlights
 - 🌟 Tech stack: MERN Stack
@@ -35,10 +50,12 @@
 
 # App Features
 👉 Authentication System: User management through Mongo DB database, ensuring secure and efficient authentication.
+(Full User Authentication System)
 - Sign UP
 - Sign IN
 - Forget Password 👉 Using user Email to send a reset password link
 - Reset password 👉 Using a reset link that is valid to use for only one time
+- Login with Google
 
 👉 Modern Design & Animations
 
@@ -85,29 +102,33 @@ git clone git@github.com:MO-GBR/smart_ecom_website.git
 2. Step 2: ENV Files
 - Client
 ```bash
-VITE_BASE_URL='http://localhost:5000/api'
+VITE_API_URL="http://localhost:5000/api"
+VITE_MODE="production"
 VITE_STRIPE_PUBLIC_KEY=
 ```
 - Api
 ```bash
 PORT=5000
 MONGO_DB_URI=
-JWT_SEC=
+JWT_SECRET=
 EMAIL_SERVICE=
 EMAIL_USERNAME=
 EMAIL_PASSWORD=
 EMAIL_FROM=
-BASE_URL="http://localhost:5000"
+CLIENT_URL="http://localhost:5173"
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
+GOOGLE_CALLBACK_URL="http://localhost:5000/api/oauth/google/callback"
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 STRIPE_PUBLIC_KEY=
 STRIPE_SECRET_KEY=
 NODE_ENV="production"
 ```
 3. Step 3: Run this Command
 ```bash
-cd smart_ecom_website && npm run build
+cd smart_ecom_website && npm run build && npm run start
 ```
 - It will do 5 things
   1. Access the smart_ecom_website folder.

@@ -2,16 +2,19 @@ import React, { useState } from 'react'
 import { useScroll } from '../Hook/useScroll'
 import UserSign from './UserSign';
 import { Link } from 'react-router-dom';
-import { useFetch } from '../Hook/useFetch';
 import SearchList from './SearchList';
-import SHeader from './Skeleton/SHeader';
+import { useGetProductsQuery } from '../Redux/RTK/Products';
+import HeaderSkeleton from './Skeleton/HeaderSkeleton';
 
 const Header = () => {
     const [ ad, setAd ] = useState(true);
-    const [ filteredData, setFilteredData ] = useState('');
+    const [ searchText, setSearchText ] = useState('');
     const [ { scrollY } ] = useScroll();
-    const [search, setSearch] = useState(false);
-    const [ data ] = useFetch('product/');
+    const [ search, setSearch ] = useState(false);
+    const { data: allProducts, isLoading } = useGetProductsQuery(undefined, {
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true
+    });
 
     const blurSearch = () => {
         setTimeout(() => {
@@ -19,7 +22,7 @@ const Header = () => {
         }, 700);
     };
 
-    if(data === null) return <SHeader />
+    if(isLoading) return <HeaderSkeleton />
     
     return (
         <header className={`header transition-all duration-300 flex-col ${scrollY > 120 ? 'header-scroll' : ''}`}>
@@ -54,14 +57,20 @@ const Header = () => {
                         <input
                             type='text'
                             placeholder='Search ...'
-                            value={filteredData}
-                            onChange={e => setFilteredData(e.target.value)}
+                            value={searchText}
+                            onChange={e => setSearchText(e.target.value)}
                             onFocus={() => setSearch(true)}
                             onBlur={blurSearch}
                         />
+                        <img
+                            src='/icons/white-close.svg'
+                            alt='search-icon'
+                            className='img w-[20px] cursor-pointer'
+                            onClick={() => setSearchText('')}
+                        />
                     </div>
                     {
-                        search && <SearchList filteredData={filteredData} data={data.data} />
+                        search && <SearchList searchText={searchText} data={allProducts?.data} />
                     }
                 </div>
                 <UserSign />

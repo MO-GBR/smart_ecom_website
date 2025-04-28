@@ -1,18 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from '../Button'
-import { fetchData } from '../../Lib/fetchData';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDeleteProductMutation, useGetProductByIdQuery } from '../../Redux/RTK/Products';
 
-const Product = ({ title, id, quantity, manage }) => {
+const Product = ({ id, quantity, manage }) => {
     const navigate = useNavigate();
+    
+    const [ deleteProductMutation, others ] = useDeleteProductMutation();
+
+    const { data: productData, refetch } = useGetProductByIdQuery(id, {
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true
+    });
+
+    useEffect(() => {
+        refetch();
+    }, []);
+
     const deleteProduct = async (e) => {
         e.preventDefault();
-        await fetchData(`product/${id}`, 'DELETE');
+        await deleteProductMutation(id);
         navigate(0);
     };
     return (
         <div className='border border-gray-500 p-3 w-[90%] my-5 flexBetween max-md:flex-col'>
-            <p className='font-bold'>{title}</p>
+            <p className='font-bold'>{ productData && productData.data.title }</p>
             <div className='flexAround'>
                 <Button title="Details" icon="/icons/info-white.svg" href={`/product/${id}`} btnType="button" />
                 {

@@ -133,6 +133,10 @@
     @apply w-[60%] h-fit bg-amber-50 absolute my-2 rounded-2xl flex flex-col items-center max-md:w-[90%];
   }
 
+  .link {
+    @apply text-blue-800 font-bold cursor-pointer hover:text-violet-800 bg-gray-400 rounded-2xl p-2 m-2;
+  }
+
   /*========== GRADIENT ============  */
   .g1 {
     @apply bg-gradient-to-b from-black to-gray-800;
@@ -254,65 +258,15 @@
   }
 
   /* =========== Skeleton ========== */
-  .skeleton-text {
-    @apply w-full h-[0.5rem] mb-[3px] rounded-xl last:w-[80%];
+  .S_Header {
+    @apply w-[95%] h-[50px] rounded-xl animate-pulse bg-gray-400 m-2;
   }
 
-  .skeleton-heading {
-    @apply w-[300px] h-[2rem] mb-[3px] rounded-xl;
+  .S_Testimonial {
+    @apply w-[20vw] h-[50vh] rounded-xl animate-pulse bg-gray-400 m-2 flex justify-center items-center flex-col gap-3 max-md:w-[90%] max-md:p-5;
   }
 
-  .skeleton-productImg {
-    @apply w-[50px] h-[50px] rounded-full p-5;
+  .S_Product {
+    @apply w-[350px] max-md:w-[250px] h-[350px] bg-gray-400 rounded-xl animate-pulse m-2 flex justify-center items-center flex-col gap-3;
   }
-
-  .skeleton-cardImg {
-    @apply w-[350px] h-[500px] rounded-2xl p-5 m-5;
-  }
-
-  .skeleton-header {
-    @apply w-full h-[50px] rounded-2xl p-5 my-3;
-  }
-}
-
-/* Skeleton */
-.skeleton {
-  animation: skeleton-loading 1s linear infinite alternate;
-}
-
-@keyframes skeleton-loading {
-  from {
-    background-color: hsl(200, 20%, 70%);
-    opacity: 0.2;
-  }
-
-  to {
-    background-color: hsl(200, 20%, 95%);
-    opacity: 0.7;
-  }
-}
-
-/* width */
-::-webkit-scrollbar {
-  width: 12px;
-  margin-right: 50px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey;
-  border-radius: 20px;
-  margin-right: 50px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #000040;
-  border-radius: 20px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #0000a0;
-  cursor: pointer;
 }

@@ -2,26 +2,35 @@ import React, { useState, useEffect } from 'react'
 import { colors } from '../Constants'
 import Button from '../Components/Button';
 import { useParams } from 'react-router-dom';
-import { useFetch } from '../Hook/useFetch';
 import { useDispatch } from 'react-redux';
-import { addItemToCart } from '../Redux/Actions/CartActions';
+import { useGetProductByIdQuery } from '../Redux/RTK/Products';
+import { useAddToCartMutation } from '../Redux/RTK/Cart';
+import { addItemToCart, setTotalPrice } from '../Redux/Slices/CartSlice';
 
 const Product = () => {
     const id = useParams().id;
     const dispatch = useDispatch();
-    const [ data ] = useFetch(`product/${id}`);
-    const [selectedColor, setSelectedColor] = useState('bg-[#000]');
-    const [prodctColor, setProdctColor] = useState({bg: 'bg-[#000]', code: '#000'});
-    const [quantity, setQuantity] = useState(1);
+    const [ selectedColor, setSelectedColor ] = useState('bg-[#000]');
+    const [ prodctColor, setProdctColor ] = useState({bg: 'bg-[#000]', code: '#000'});
+    const [ quantity, setQuantity ] = useState(1);
 
-    console.log(data);
+    const [ addToCart, others ] = useAddToCartMutation();
+
+    const { data, refetch } = useGetProductByIdQuery(id, {
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true
+    });
+
+    useEffect(() => {
+        refetch();
+    }, []);
 
     const handleQuantity = (handleType) => {
         if(handleType === 'plus') {
             setQuantity(quantity + 1);
         }
         if(handleType === 'minus') {
-            if(qunatity === 0) return;
+            if(quantity === 1) return;
             setQuantity(quantity - 1);
         }
     };
@@ -31,13 +40,22 @@ const Product = () => {
         setProdctColor(color);
     }
 
-    const addProductToCart = () => {
-        const product = {
-            product: data.data,
+    const addProductToCart = async () => {
+        const cartItem = {
+            productId: data.data._id,
             quantity,
             color: prodctColor
         };
-        addItemToCart(dispatch, product);
+
+        dispatch(addItemToCart(cartItem));
+
+        try {
+            const res = await addToCart(cartItem).unwrap();
+            dispatch(setTotalPrice(res.data.totalPrice));
+            console.log('Product added to cart:', cartItem);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -93,7 +111,7 @@ const Product = () => {
                             />
                         </div>
                     </div>
-                    <Button title={<p onClick={addProductToCart}>Add To Cart</p>} icon="/icons/add-cart-white.svg" btnType="button" />
+                    <Button title={<p onClick={addProductToCart}>{ others.isLoading ? 'Processing ...' : 'Add To Cart' }</p>} icon="/icons/add-cart-white.svg" btnType="button" />
                 </div>
             </div>
             <div className='flexAround w-full max-md:flex-col'>

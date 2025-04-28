@@ -1,4 +1,4 @@
-import { routes } from "../Constants";
+const routes = ['admin', 'newproduct', 'checkout', 'success', 'editproduct'];
 
 export const layoutRoutesTerm = (path) => {
     if(path.includes('/')) {

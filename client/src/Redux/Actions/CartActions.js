@@ -1,17 +1,12 @@
-import { addToCart, removeFromCart } from '../Slices/CartSlice';
+import { setCart } from '../Slices/CartSlice';
 
-export const addItemToCart = (dispatch, product) => {
+export const setCurrentUserCart = (dispatch, cart) => {
     try {
-        dispatch(addToCart(product));
+        dispatch(setCart({
+            cart: cart.cart,
+            totalPrice: cart.totalPrice
+        }));
     } catch (error) {
         console.log(error.message);
     }
 };
-
-export const removeItemToCart = (dispatch, product) => {
-    try {
-        dispatch(removeFromCart(product));
-    } catch (error) {
-        console.log(error.message);
-    }
-}

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom';
-import { useFetch } from '../Hook/useFetch';
 import EditForm from '../Components/Admin/EditForm';
-
+import { useGetProductByIdQuery } from '../Redux/RTK/Products';
 
 const UpdateProduct = () => {
     const id = useParams().id;
-    const [ data ] = useFetch(`product/${id}`);
 
-    if(data === null) {
+    const { data, isLoading } = useGetProductByIdQuery(id);
+
+    if(isLoading) {
         return (
             <div className='w-full h-screen flexCenter'>
                 <div className='h1-bold text-white text-center'>Loading...</div>

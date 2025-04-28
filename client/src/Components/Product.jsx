@@ -3,7 +3,8 @@ import Button from '../Components/Button'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap';
 
-const Product = ({img, title, price, id}) => {
+const Product = ({productDetails}) => {
+    const { img, title, price, _id } = productDetails;
     const { contextSafe } = useGSAP();
 
     const handleScaleIn = contextSafe(({ currentTarget }) => {
@@ -34,7 +35,7 @@ const Product = ({img, title, price, id}) => {
                 />
             </div>
             <p className='p-bold-24 text-white'>{title}</p>
-            <Button title="Details" icon="/icons/info-white.svg" href={`product/${id}`} btnType="button" />
+            <Button title="Details" icon="/icons/info-white.svg" href={`product/${_id}`} btnType="button" />
             <div className='w-full flexAround'>
                 <p className='p-semibold-20 text-white'>{`$${price}`}</p>
                 <div className='bg-white rounded-full p-2 cursor-pointer'>

@@ -2,9 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     fetching: false,
-    user: null,
-    message: '',
-    error: false
+    currentUser: null,
 };
 
 const userSlice = createSlice({
@@ -15,9 +13,7 @@ const userSlice = createSlice({
             state.fetching = true;
         },
         authProcess: (state, action) => {
-            state.user = action.payload.user;
-            state.message = action.payload.msg;
-            state.error = action.payload.err;
+            state.currentUser = action.payload.user;
         },
         end: (state, action) => {
             state.fetching = false;

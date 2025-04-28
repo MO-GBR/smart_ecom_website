@@ -1,27 +1,28 @@
 import React, { useState } from 'react'
-import { fetchData } from '../Lib/fetchData';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCart } from '../Redux/Slices/CartSlice';
 import { clearCart } from '../Redux/Slices/CartSlice';
-import { selectUser } from '../Redux/Slices/UserSlice';
 import { loadStripe } from '@stripe/stripe-js';
 import { useNavigate } from 'react-router-dom';
 import { CardElement, useStripe, useElements, Elements } from "@stripe/react-stripe-js";
 import Button from './Button';
+import { useCreateOrderMutation } from '../Redux/RTK/Order';
+import { useClearCartMutation } from '../Redux/RTK/Cart';
 
 const stripeKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
 
 const CheckoutForm = () => {
     const [ address, setAddress ] = useState('');
     const [ phoneNumber, setPhoneNumber ] = useState('');
-    const [success, setSuccess] = useState(false);
-    const [error, setError] = useState(false);
-    const [disabled, setDisabled] = useState(true);
+    const [ error, setError ] = useState(false);
+    const [ disabled, setDisabled ] = useState(true);
+
+    const [ createOrderMutation, others ] = useCreateOrderMutation();
+    const [ clearUserCart, others0 ] = useClearCartMutation();
 
     const dispatch = useDispatch();
 
-    const { totalPrice, cart } = useSelector(selectCart);
-    const { user } = useSelector(selectUser);
+    const { totalPrice } = useSelector(selectCart);
 
     const navigate = useNavigate();
 
@@ -37,16 +38,16 @@ const CheckoutForm = () => {
         const cardElement = elements.getElement(CardElement);
         const { error, token } = await stripe.createToken(cardElement);
 
+        const newOrder = {
+            address,
+            phoneNumber,
+            amount: totalPrice,
+            token,
+        };
+
         if(!error) {
-            await fetchData('order/new', 'POST', {
-                address,
-                phoneNumber,
-                amount: totalPrice,
-                token,
-                fullCart: cart,
-                cartId: user.data.cart,
-                userId: user.data.id
-            });
+            await createOrderMutation(newOrder).unwrap();
+            await clearUserCart().unwrap();
             navigate('/success');
             dispatch(clearCart());
         }
@@ -81,7 +82,7 @@ const CheckoutForm = () => {
                 <div className='w-full flexCenter border border-gray-300 rounded-md p-2'>
                     <CardElement className='w-full' onChange={handleChange} />
                 </div>
-                <Button title="Pay" icon="/icons/card-white.svg" btnType="submit" />
+                <Button title={others.isLoading ? 'Processing ...' : 'Pay'} icon="/icons/card-white.svg" btnType="submit" />
                 {error && <p className='msg-error'>{error}</p>}
             </form>
         </div>

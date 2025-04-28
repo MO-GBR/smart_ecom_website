@@ -18,40 +18,42 @@ import Checkout from './Pages/Checkout'
 import { layoutRoutesTerm } from './Lib/layoutRoutesTerm'
 import PaymentConfirm from './Pages/PaymentConfirm'
 import UpdateProduct from './Pages/UpdateProduct'
+import OAuthSuccess from './Pages/OAuthSuccess'
 
 const Layout = () => {
-  const { user } = useSelector(selectUser);
+  const { currentUser } = useSelector(selectUser);
   const pathname = useLocation().pathname;
   const path = pathname.slice(1);
-  console.log('path >>>', path, path.includes('/'));
+  
   return (
     <>
-      { (user && layoutRoutesTerm(path)) && <Header /> }
+      { (currentUser && layoutRoutesTerm(path)) && <Header /> }
       <Outlet />
-      { (user && layoutRoutesTerm(path)) && <Footer /> }
+      { (currentUser && layoutRoutesTerm(path)) && <Footer /> }
     </>
   )
 };
 
 
 const App = () => {
-  const { user } = useSelector(selectUser);
+  const { currentUser } = useSelector(selectUser);
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
-          <Route index element={ user ? <Home /> : <Navigate to="/signin" /> } />
-          <Route path='/signup' element={ user ? <Navigate to="/" /> : <Register /> } />
-          <Route path='/signin' element={ user ? <Navigate to="/" /> : <Login /> } />
+          <Route index element={ currentUser ? <Home /> : <Navigate to="/signin" /> } />
+          <Route path='/signup' element={ currentUser ? <Navigate to="/" /> : <Register /> } />
+          <Route path='/signin' element={ currentUser ? <Navigate to="/" /> : <Login /> } />
           <Route path='/forgetpassword' element={<ForgetPassword />} />
           <Route path='/resetpassword/:resetToken' element={<ResetPassword />} />
-          <Route path='/admin' element={user?.data.role === 'Admin' ? <AdminDashboard /> : <Navigate to='/' />} />
+          <Route path='/admin' element={currentUser?.role === 'Admin' ? <AdminDashboard /> : <Navigate to='/' />} />
           <Route path='/editproduct/:id' element={<UpdateProduct />} />
           <Route path='/newproduct' element={<CreateProduct />} />
           <Route path='/product/:id' element={<Product />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/checkout' element={<Checkout />} />
           <Route path='/success' element={<PaymentConfirm />} />
+          <Route path='/oauth-success' element={<OAuthSuccess />} />
           <Route path='*' element={<Navigate to="/" />} />
         </Route>
       </Routes>

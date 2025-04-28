@@ -1,22 +1,20 @@
 import React, { useState } from 'react'
 import Button from '../Components/Button'
 import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux';
-import { ResetUserPassword } from '../Redux/Actions/UserActions';
-import { selectUser } from '../Redux/Slices/UserSlice';
+import { useResetPasswordMutation } from '../Redux/RTK/Auth';
 
 const ResetPassword = () => {
     const resetToken = useParams().resetToken;
 
     const [ password, setPassword ] = useState('');
-    const [ confirmassword, setConfirmassword ] = useState('');
+    const [ confirmPassword, setConfirmPassword ] = useState('');
 
-    const dispatch = useDispatch();
-    const { fetching, user, message, error } = useSelector(selectUser);
+    const [ resetPassword, { data, isError, error, isLoading } ] = useResetPasswordMutation();
 
-    const onSubmitReset = (e) => {
+    const onSubmitReset = async (e) => {
         e.preventDefault();
-        ResetUserPassword(dispatch, resetToken, password, confirmassword);
+        const resetInput = { password, confirmPassword };
+        await resetPassword({ resetToken, resetInput }).unwrap();
     };
     
     return (
@@ -27,9 +25,14 @@ const ResetPassword = () => {
             />
             <form className='authContainer flexCenter' onSubmit={onSubmitReset}>
                 {
-                    message && (
+                    isError && (
+                        <p className='msg-error'>{error.data.data}</p>
+                    )
+                }
+                {
+                    data && (
                         <div className='w-full bg-black rounded-3xl p-2 flexCenter flex-col'>
-                            <p className={ error ? 'msg-error w-full' : 'msg w-full' }>{message}</p>
+                            <p className='msg w-full'>{data.data}</p>
                             <Button title="Sign In" href="/signin" icon="/icons/login-white.svg" btnType="button" />
                         </div>
                     )
@@ -38,9 +41,9 @@ const ResetPassword = () => {
                     <input type='password' placeholder='Your Password' value={password} onChange={e => setPassword(e.target.value)} />
                 </label>
                 <label className='BlackLabel'>
-                    <input type='password' placeholder='Confirm Your Password' value={confirmassword} onChange={e => setConfirmassword(e.target.value)} />
+                    <input type='password' placeholder='Confirm Your Password' value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
                 </label>
-                <Button title="Reset Password" icon="/icons/reset-password-white.svg" btnType="submit" />
+                <Button title={isLoading ? 'Processing...' : 'Reset Password'} icon="/icons/reset-password-white.svg" btnType="submit" />
             </form>
         </div>
     )

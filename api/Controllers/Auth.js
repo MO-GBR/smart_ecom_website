@@ -1,10 +1,10 @@
 import Cart from "../Mongo/Models/Cart.js";
 import User from "../Mongo/Models/User.js";
 import { SendEmail } from "../Utils/HandleEmail.js";
+import { hashPassword, comparePassword } from "../Utils/HandlePassword.js";
 import { getResetPasswordToken, resetTokenValue } from "../Utils/HandleResetToken.js";
 import { ErrorResponse, ActionResponse } from "../Utils/HandleResponse.js";
 import { createToken } from "../Utils/HandleToken.js";
-import bcrypt from "bcryptjs";
 
 // Register
 export const register = async (req, res) => {
@@ -33,8 +33,8 @@ export const register = async (req, res) => {
             return res.status(400).json(err);
         };
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = hashPassword(password);
+
         const emptyCart = await Cart.create({
             cartItems: [],
             totalPrice: 0
@@ -48,14 +48,16 @@ export const register = async (req, res) => {
             cart: emptyCart
         });
 
-        if(newUser) {
-            createToken(newUser, res);
-        } else {
-            const err = new ActionResponse("Password is too short", 400);
-            return res.status(400).json(err);
+        const { password: _, ...userWithoutPassword } = newUser._doc;
+
+        const token = createToken(userWithoutPassword, res);
+
+        const UserData = {
+            user: userWithoutPassword,
+            token
         };
 
-        const data = new ActionResponse(newUser, 200);
+        const data = new ActionResponse(UserData, 200);
 
         return res.status(200).json(data);
     } catch (error) {
@@ -81,22 +83,21 @@ export const login = async (req, res) => {
             return res.status(400).json(err);
         }
 
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        const isPasswordCorrect = comparePassword(password, user.password);
 
         if(!isPasswordCorrect) {
             const err = new ActionResponse("Invalid password", 400);
             return res.status(400).json(err);
         }
 
-        const UserData = {
-            id: user._id,
-            fullName: `${user.firstName} ${user.lastName}`,
-            email: user.email,
-            role: user.role,
-            cart: user.cart
-        };
+        const { password: _, ...userWithoutPassword } = user._doc;
 
-        createToken(UserData, res);
+        const token = createToken(userWithoutPassword, res);
+
+        const UserData = {
+            user: userWithoutPassword,
+            token
+        };
 
         const data = new ActionResponse(UserData, 200);
 
@@ -121,7 +122,7 @@ export const forgetPassword = async (req, res) => {
 
         const ApplyResetPasswordToken = await getResetPasswordToken(user._id);
 
-        const resetURL = `${process.env.BASE_URL}/resetpassword/${ApplyResetPasswordToken}`;
+        const resetURL = `${process.env.CLIENT_URL}/resetpassword/${ApplyResetPasswordToken}`;
 
         const message = `
            <h1>You have requested a password reset</h1>
@@ -177,8 +178,7 @@ export const resetPassword = async (req, res) => {
             return res.status(400).json(err);
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = hashPassword(password);
 
         try {
             await User.findByIdAndUpdate(
@@ -203,36 +203,6 @@ export const resetPassword = async (req, res) => {
         return res.status(400).json(err);
     }
 };
-
-// Google Auth
-export const OAuthUserRegister = async (req, res) => {
-    const { firstName, email, authProviderId } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-        if(user) {
-            const data = new ActionResponse(user, 200);
-            res.status(200).json(data);
-        } else {
-            const emptyCart = await Cart.create({
-                cartItems: [],
-                totalPrice: 0
-            });
-            const newUser = await User.create({
-                firstName,
-                email,
-                authProviderId,
-                cart: emptyCart
-            });
-            const data = new ActionResponse(newUser, 200);
-            res.status(200).json(data);
-        }
-    } catch (error) {
-        console.log("Error in OAuth controller", error.message);
-        const err = new ErrorResponse(error.message, 400);
-        return res.status(400).json(err);
-    }
-}
 
 // Check user auth
 export const checkAuth = (req, res) => {

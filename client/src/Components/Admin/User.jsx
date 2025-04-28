@@ -1,11 +1,14 @@
 import React from 'react'
-import { fetchData } from '../../Lib/fetchData';
 import { useNavigate } from 'react-router-dom';
+import { useDeleteUserMutation } from '../../Redux/RTK/User';
 
 const User = ({ id, fullName }) => {
     const navigate = useNavigate();
+
+    const [ deletUserMutation, others ] = useDeleteUserMutation();
+
     const deleteUser = async () => {
-        await fetchData(`users/${id}`, 'DELETE');
+        await deletUserMutation(id);
         navigate(0);
     };
     return (

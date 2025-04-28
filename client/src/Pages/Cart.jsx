@@ -3,19 +3,25 @@ import Button from '../Components/Button'
 import CartItem from '../Components/CartItem'
 import { useSelector, useDispatch } from 'react-redux';
 import { clearCart, selectCart } from '../Redux/Slices/CartSlice'
-import { fetchData } from '../Lib/fetchData';
-import { selectUser } from '../Redux/Slices/UserSlice';
+import { useClearCartMutation } from '../Redux/RTK/Cart';
 
 const Cart = () => {
     const { cart, totalPrice } = useSelector(selectCart);
-    const { user } = useSelector(selectUser);
+
+    const [ clearUserCart, others ] = useClearCartMutation();
+
     const dispatch = useDispatch();
-    const clearMyCart = () => {
+
+    const clearMyCart = async () => {
         dispatch(clearCart());
+        try {
+            const res = await clearUserCart().unwrap();
+            console.log('Cart cleared:', res.data);
+        } catch (error) {
+            console.log(error);
+        }
     };
-    const updateCart = async () => {
-        await fetchData('cart/update', 'PUT', { cartId: user.data.cart, fullCart: cart, totalPrice });
-    };
+    
     return (
         <div className='flexCenter flex-col mt-26 max-md:mt-[15rem]'>
             <h1 className='h1-bold text-center text-white'>Your Cart</h1>
@@ -37,16 +43,19 @@ const Cart = () => {
                     {
                         cart.length === 0 
                         ?   <p className='text-white h1-bold w-full text-center col-span-2 my-10'>Cart is Empty</p> 
-                        :   cart.map((product, index) => (
-                                <CartItem product={product} key={index} />
-                            )) 
+                        :   cart.map((product, index) => {
+                                console.log(`${index} >>>`, product);
+                                return (
+                                    <CartItem key={index} product={product} />
+                                )
+                            }) 
                     }
                 </div>
             </div>
             {
                 cart.length > 0 &&
                 <div className='flexCenter w-full'>
-                    <Button title={<p onClick={updateCart}>CHECKOUT</p>} href="/checkout" icon="/icons/cart-white.svg" btnType="button" />
+                    <Button title='CHECKOUT' href="/checkout" icon="/icons/cart-white.svg" btnType="button" />
                 </div>
             }
         </div>

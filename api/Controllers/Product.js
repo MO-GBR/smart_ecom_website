@@ -49,6 +49,7 @@ export const getProduct = async (req, res) => {
 
     try {
         const product = await Product.findById(id);
+        if(!product) return res.status(404).json({message: "Product not found"});
         const data = new ActionResponse(product, 200);
         res.status(200).json(data);
     } catch (error) {

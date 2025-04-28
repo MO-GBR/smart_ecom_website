@@ -4,7 +4,7 @@
   "description": "<h1 align=\"center\">\r     Hi 👋, my name is Mohamed Gabr\r </h1>\r <h3 align=\"center\">\r     I'm a Full-Stack web developer\r </h3>",
   "main": "index.js",
   "scripts": {
-    "build": "npm install --prefix api && npm install --prefix client && npm run build --prefix client && npm start --prefix api",
+    "build": "npm install --prefix api && npm install --prefix client && npm run build --prefix client",
     "start": "npm start --prefix api"
   },
   "repository": {

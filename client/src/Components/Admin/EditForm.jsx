@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
-import { fetchData } from '../../Lib/fetchData';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Button';
+import { useUpdateProductMutation } from '../../Redux/RTK/Products';
 
 const EditForm = ({ product, id }) => {
-    const [title, setTitle] = useState(product.title);
-    const [description, setDescription] = useState(product.description);
-    const [price, setPrice] = useState(product.price);
-    const [selectedImg, setSelectedImg] = useState(product.img);
-    const [msg, setMsg] = useState('');
+    const [ title, setTitle ] = useState(product.title);
+    const [ description, setDescription ] = useState(product.description);
+    const [ price, setPrice ] = useState(product.price);
+    const [ selectedImg, setSelectedImg ] = useState(product.img);
+    const [ msg, setMsg ] = useState('');
 
     const navigate = useNavigate();
+
+    const [ updateThisProduct, others ] = useUpdateProductMutation();
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
@@ -33,7 +35,7 @@ const EditForm = ({ product, id }) => {
             img: selectedImg,
             price
         };
-        await fetchData(`product/update/${id}`, 'PUT', product);
+        await updateThisProduct({ id, product });
         setMsg('Product Updated Successfully!');
         navigate('/admin');
     };

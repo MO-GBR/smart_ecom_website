@@ -4,7 +4,7 @@ import Testimonial from '../Components/Testimonial'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap';
 import { useLoading } from '../Hook/useLoading';
-import SCard from '../Components/Skeleton/SCard';
+import TestCardSkeleton from '../Components/Skeleton/TestCardSkeleton';
 
 const PopulareProduct = () => {
     const { contextSafe } = useGSAP();
@@ -49,7 +49,7 @@ const PopulareProduct = () => {
                         testimonials.map((test, index) => {
                             if(loading) {
                                 return (
-                                    <SCard key={index} />
+                                    <TestCardSkeleton key={index} />
                                 )
                             } else {
                                 return (

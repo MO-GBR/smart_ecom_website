@@ -1,16 +1,23 @@
-import { ErrorResponse } from "../Utils/HandleResponse.js";
+import { ErrorResponse } from '../Utils/HandleResponse.js';
 import { decodeToken } from '../Utils/HandleToken.js';
 
 export const verifyToken = (req, res, next) => {
-    const decodedToken = decodeToken(req);
-    if(!decodedToken) return res.status(400).json("You are not authenticated!");
-    req.user = decodedToken;
+    const token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
+
+    try {
+        const decodedToken = decodeToken(token);
+        if(!decodedToken) return res.status(400).json("You are not authenticated!");
+        req.user = decodedToken;
+    } catch (error) {
+        console.error("Invalid token:", error.message);
+        return res.status(403).json("Token is not valid");
+    }
     next();
 };
 
 export const protectUserRoute = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req?.user?.data?.id === req.params.id || req?.user?.data?.role === "Admin") {
+        if (req.user) {
             next();
         } else {
             res.status(400).json("You are not authenticated!")
@@ -20,7 +27,7 @@ export const protectUserRoute = (req, res, next) => {
 
 export const protectAdminRoute = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req?.user?.data?.role === "Admin") {
+        if (req.user.role === "Admin") {
             next();
         } else {
             res.status(403).json("You are not allowed to do that!")

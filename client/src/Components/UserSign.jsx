@@ -3,19 +3,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../Redux/Slices/UserSlice';
 import { LogoutUser } from '../Redux/Actions/UserActions';
 import { Link } from 'react-router-dom';
-import { selectCart } from '../Redux/Slices/CartSlice'
+import { clearCart, selectCart } from '../Redux/Slices/CartSlice'
+import { useLogoutMutation } from '../Redux/RTK/Auth';
 
 const UserSign = () => {
-    const { user } = useSelector(selectUser);
+    const { currentUser } = useSelector(selectUser);
     const { cart } = useSelector(selectCart);
     const dispatch = useDispatch();
 
-    const LogUserOut = () => {
+    const fullName = `${currentUser.firstName} ${currentUser.lastName}`;
+
+    const [ logout, others ] = useLogoutMutation();
+
+    const LogUserOut = async () => {
+        await logout();
+        dispatch(clearCart());
         LogoutUser(dispatch);
     };
     return (
         <div className='flexAround max-md:flex-col'>
-            <Link to="/" className='font-bold mr-2 text-white'>Hi, {user.data.fullName}</Link>
+            <Link to="/" className='font-bold mr-2 text-white'>Hi, {fullName}</Link>
             <div className='flexAround'>
                 <div className='p-2 rounded-full cursor-pointer hover:bg-yellow-200' title='Sign Out' onClick={LogUserOut}>
                     <img
@@ -25,7 +32,7 @@ const UserSign = () => {
                     />
                 </div>
                 {
-                    user.data.role === 'Admin' && (
+                    currentUser.role === 'Admin' && (
                         <Link to="/admin" className='p-2 rounded-full cursor-pointer hover:bg-yellow-200' title='Admin'>
                             <img
                                 src='/icons/admin-white.svg'

@@ -10,10 +10,32 @@ env.config();
 export const createOrder = async (req, res) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-    const { address, amount, phoneNumber, token, fullCart, cartId, userId } = req.body;
+    const { address, amount, phoneNumber, token } = req.body;
+
+    const userId = req.user._id;
     
     try {
-        // 1. Create a Customer.
+        // 1. Find the user & cart.
+        const user = await User.findById(userId).populate({
+            path: "cart",
+            populate: {
+                path: "cartItems.product",
+                model: "Product",
+            },
+        });
+
+        const cart = user.cart;
+
+        // 2. Create a new version of cart.
+        const fullCart = cart?.cartItems.map((item) => {
+            return {
+                productId: item.product._id,
+                quantity: item.quantity,
+                color: item.color
+            };
+        }) || [];
+
+        // 3. Create a Customer.
         const customer = await stripe.customers.create({
             metadata: {
                 phoneNumber,
@@ -24,11 +46,7 @@ export const createOrder = async (req, res) => {
             source: token.id
         });
 
-        // 2. Find the user & cart.
-        const user = await User.findById(userId);
-        const cart = await Cart.findById(cartId);
-
-        // 3. Create an Order.
+        // 4. Create an Order.
         const order = await Order.create({
             buyer: user,
             amount,
@@ -39,7 +57,7 @@ export const createOrder = async (req, res) => {
             stripeId: customer.id
         });
 
-        // 4. Charge the Customer instead of the card.
+        // 5. Charge the Customer instead of the card.
         const payment = await stripe.charges.create({
             amount: amount * 100,
             currency: "usd",
@@ -62,6 +80,7 @@ export const createOrder = async (req, res) => {
         return res.status(400).json(err);
     }
 };
+
 // Get all orders
 export const getAllOrders = async (req, res) => {
     try {

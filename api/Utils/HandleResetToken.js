@@ -1,9 +1,9 @@
-import crypto from 'crypto';
+import { randomBytes, createHash } from 'node:crypto';
 import User from '../Mongo/Models/User.js';
 
 export const getResetPasswordToken = async (id) => {
-    const resetToken = crypto.randomBytes(20).toString("hex");
-    const resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    const resetToken = randomBytes(20).toString("hex");
+    const resetPasswordToken = createHash("sha256").update(resetToken).digest("hex");
     const resetPasswordExpire = Date.now() + 10 * (60 * 1000);
 
     await User.findByIdAndUpdate(
@@ -19,5 +19,5 @@ export const getResetPasswordToken = async (id) => {
 };
 
 export const resetTokenValue = (resetToken) => {
-    return crypto.createHash("sha256").update(resetToken).digest("hex");
+    return createHash("sha256").update(resetToken).digest("hex");
 };

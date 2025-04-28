@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import Button from '../Components/Button';
-import { fetchData } from '../Lib/fetchData';
 import { useNavigate } from 'react-router-dom';
+import { useAddProductMutation } from '../Redux/RTK/Products';
 
 const CreateProduct = () => {
-    const [selectedImg, setSelectedImg] = useState(null);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [msg, setMsg] = useState('');
+    const [ selectedImg, setSelectedImg ] = useState(null);
+    const [ title, setTitle ] = useState('');
+    const [ description, setDescription ] = useState('');
+    const [ price, setPrice ] = useState('');
+    const [ msg, setMsg ] = useState('');
 
     const navigate = useNavigate();
+
+    const [ addNewProduct, others ] = useAddProductMutation();
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
@@ -33,7 +35,7 @@ const CreateProduct = () => {
             img: selectedImg,
             price
         };
-        await fetchData('product/new', 'POST', product);
+        await addNewProduct(product);
         setMsg('Product Created Successfully!');
         navigate('/admin');
     };
@@ -63,7 +65,7 @@ const CreateProduct = () => {
                 <label className='BlackLabel'>
                     <input type='number' placeholder='Price' value={price} onChange={e => setPrice(e.target.value)} />
                 </label>
-                <Button title="Create Product" btnType="submit" icon='/icons/plus-white.svg' />
+                <Button title={others.isLoading ? 'Processing...' : 'Create Product'} btnType="submit" icon='/icons/plus-white.svg' />
             </form>
         </div>
     )

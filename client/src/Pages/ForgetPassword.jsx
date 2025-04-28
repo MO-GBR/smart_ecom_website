@@ -2,18 +2,18 @@ import React, { useState } from 'react'
 import Button from '../Components/Button'
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../Redux/Slices/UserSlice';
-import { ForgetUserPassword } from '../Redux/Actions/UserActions';
+import { useForgetPasswordMutation } from '../Redux/RTK/Auth';
 
 const ForgetPassword = () => {
     const [ email, setEmail ] = useState('');
 
-    const dispatch = useDispatch();
-    const { fetching, user, message, error } = useSelector(selectUser);
+    const [ forgetPassword, { data: emailConfirmation, isLoading, isError, error } ] = useForgetPasswordMutation();
 
     const onSubmitSend = async (e) => {
         e.preventDefault();
-        ForgetUserPassword(dispatch, email);
+        await forgetPassword({email}).unwrap();
     };
+
     return (
         <div className='w-full flexCenter max-md:h-screen'>
             <img
@@ -22,14 +22,19 @@ const ForgetPassword = () => {
             />
             <form className='authContainer flexCenter' onSubmit={onSubmitSend}>
                 {
-                    message && (
-                        <p className={ error ? 'msg-error' : 'msg' }>{message}</p>
+                    isError && (
+                        <p className='msg-error'>{error.data.data}</p>
+                    )
+                }
+                {
+                    emailConfirmation && (
+                        <p className='msg'>{emailConfirmation.data.data}</p>
                     )
                 }
                 <label className='BlackLabel'>
                     <input type='email' placeholder='Your Email' value={email} onChange={e => setEmail(e.target.value)} />
                 </label>
-                <Button title="Send Email" icon="/icons/send-email-white.svg" btnType="submit" />
+                <Button title={isLoading ? 'Processing ...' : 'Send Email'} icon="/icons/send-email-white.svg" btnType="submit" />
             </form>
         </div>
     )
