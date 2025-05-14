@@ -60,6 +60,10 @@ app.use("/api/cart", CartRoutes);
 app.use("/api/product", ProductRoutes);
 app.use("/api/order", OrderRoutes);
 
+app.use("/api/", (req, res) => {
+    res.end("<h1>Hello world !!!</h1>")
+});
+
 // Deployment setup
 const __dirname = path.resolve();
 
