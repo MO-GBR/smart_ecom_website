@@ -1,18 +1,12 @@
-<h1 align="center">
-    Hi 👋, my name is Mohamed Gabr
-</h1>
-<h3 align="center">
-    I'm a Full-Stack web developer
-</h3>
+# 🔥 The Project
+- A Full-Stack e-commerce website. That can handle all of the e-commerce user features. Featuring seamless payment processing through Stripe, you have the capability to purchase order from your shopping cart. With an admin side dashboard where you have a full management system.
 
+# 🔗 Live Demo
 ![IMG-1](App-screen-1.jpg)
 ![IMG](App-screen-2.jpg)
+👉 [View]()
 
-# The Project
-- A Full-Stack Ecommerce website. That can handle all of the ecomm user features. Featuring seamless payment processing through Stripe, you have the capability to purchase order from you shopping cart. With an admin side dashbourd where you have a full mangement system.
-
----
-# Tech Stack
+#🛠️ Tech Stack
 - React JS
 - Redux
 - Node JS
@@ -20,7 +14,7 @@
 - JWT
 - Passport JS
 - Tailwind CSS
-- Mongo DB / Mongoose
+- MongoDB / Mongoose
 - Cloudinary
 - Stripe
 - Nodemailer
@@ -28,43 +22,43 @@
 - GSAP for animations
 ---
 
-# Code Overview
+# 👨‍💻 Code Overview
 ## 1. Front-end
-1. Modern Design and cool animations using 👉 Tailwind Css and GSAP.
+1. Modern Design and cool animations using 👉 Tailwind CSS and GSAP.
 2. State management using Redux
 3. Managing the connection between the front-end and the back-end and fetching data using Redux RTK Query
-4. Full user Authentication System
-5. Real Payments using stripe
+4. Full User Authentication System
+5. Real Payments using Stripe
 
 ## 2. Back-end
 1. Clean folder structure
 2. Authentication Functions using 👉 Cookies, JWT, Mongoose, Passport JS
 3. Error Handling for all routes
 
-# Highlights
+# ✨ Highlights
 - 🌟 Tech stack: MERN Stack
 - 🎃 Authentication && Authorization with JWT
 - 🐞 Error handling both on the server and on the client
 - ⏳ And much more!
 ---
 
-# App Features
-👉 Authentication System: User management through Mongo DB database, ensuring secure and efficient authentication.
+# 💎 App Features
+👉 Authentication System: User management through a MongoDB database, ensuring secure and efficient authentication.
 (Full User Authentication System)
 - Sign UP
 - Sign IN
-- Forget Password 👉 Using user Email to send a reset password link
-- Reset password 👉 Using a reset link that is valid to use for only one time
+- Forget Password 👉 Using the user's Email to send a reset password link
+- Reset password 👉 Using a reset link that is valid for only one time
 - Login with Google
 
 👉 Modern Design & Animations
 
-👉 Ecommerce
-- Cart (add product , remove product, clear cart)
+👉 E-commerce
+- Cart (add product, remove product, clear cart)
 - Checkout using Stripe
 
 👉 Search
-- You can search to find any product you want using the search bar in the header
+- You can search for any product you want using the search bar in the header
 
 👉 Full Management System (Admin Side)
 - Products Management (CRUD)
@@ -78,9 +72,9 @@
   - Block any user
 
 - Orders management
-  - A dashboard where you can see every order with all data you need like the order products, user id, stripe customer id, amount of money and more
+  - A dashboard where you can see every order with all the data you need, like the order products, user ID, Stripe customer ID, amount of money, and more
 
-# Pages
+# 📂 Pages
 - Home
 - Product details
 - Shopping cart
@@ -91,10 +85,10 @@
 - Checkout page
 - Checkout success page
 - Add product form page
-- Edit product form pag
+- Edit product form page
 - Admin dashboard
 
-# Quick Start
+# ⚡ Quick Start
 1. Step 1: Clone this repo
 ```bash
 git clone git@github.com:MO-GBR/smart_ecom_website.git
