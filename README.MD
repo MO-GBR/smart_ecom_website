@@ -6,7 +6,7 @@
 ![IMG](App-screen-2.jpg)
 👉 [View]()
 
-#🛠️ Tech Stack
+# 🛠️ Tech Stack
 - React JS
 - Redux
 - Node JS
